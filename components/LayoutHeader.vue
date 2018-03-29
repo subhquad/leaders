@@ -1,0 +1,90 @@
+<template>
+  <div>
+    <div class="top_bar">
+
+      <div class="row row1 PdLR">
+        <div class="pull-left">
+          <div class="logo">
+            <a href="/"><img src="~/assets/images/logo.png" class="img-responsive" /></a>
+          </div>
+        </div>
+        <div class="pull-right PdTB">
+          <div class="right_top">
+            <ul>
+              <li><a href="#"><img src="~/assets/images/icon_facebook.png" class="img-responsive" /></a></li>
+              <li><a href="#"><img src="~/assets/images/icon_twitter.png" class="img-responsive" /></a></li>
+            </ul>
+          </div>
+          <div class="pull-right">
+            <div class="bottom_bar MtR_20">
+              <img class="" src="~/assets/images/logo_tv.png" />
+            </div>
+            <div class="bottom_bar MtR_20">
+              <img class="" src="~/assets/images/logo_small.png" />
+            </div>
+            <div class="bottom_bar">
+              <p id="dayshow">{{date}}</p>
+              <form class="example" action="/action_page.php" style="margin:auto;max-width:200px">
+                <input type="text" placeholder="Search.." name="search2">
+                <button type="submit"><i class="fa fa-search"></i></button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="menu">
+
+      <nav class="navbar" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"
+                  style="background-color:#ED1B24"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul class="nav navbar-nav">
+            <li><nuxt-link exact to="/">Home</nuxt-link></li>
+            <li v-for="category in categories"  v-bind:key="category._id">
+              <nuxt-link :to="'/category/'+category._id">{{ category.title }}</nuxt-link>
+            </li>
+            <li style="border-right:none"><nuxt-link to="/contact-us">Contact Us</nuxt-link></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </nav>
+
+    </div>
+  </div>
+</template>
+
+<script>
+import sanity from '../sanity';
+import { getTimeHeader } from '../helpers/time';
+const query = `*[_type == "category"] {
+  _id,
+  title,
+}[0...50]`;
+  export default {
+    data () {
+      return {
+        categories: [],
+        date: getTimeHeader(),
+      }
+    },
+    mounted() {
+      sanity.fetch(query).then(data => {
+        this.categories = data;
+      }, error => {
+        this.error = error
+      });
+    },
+  };
+</script>
