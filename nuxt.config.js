@@ -11,7 +11,11 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    ],
+    script: [
+      { src: 'js/jquery-2.1.4.min.js' },
+      { src: 'js/bootstrap.js' },
+    ],
   },
   /*
   ** Global css
