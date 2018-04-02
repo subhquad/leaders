@@ -85,12 +85,12 @@
       <!--<div class="container" style="position:relative">-->
         <!--<div class="row row1">-->
           <!--<div class="col-md-1 logo_grey">-->
-            <!--<img src="~/assets/images/logo_tv_grey.png" class="img-responsive"/>-->
+            <!--<img src="~/assets/images/logo_tv_grey.png" class="img-responsive" />-->
           <!--</div>-->
           <!--<div class="col-md-11">-->
             <!--<div id="owl-demo" class="owl-carousel owl-theme">-->
-              <!--<div v-for="video of videos" v-bind:key="video.id" class="item imag">-->
-                <!--<video controls="controls" :src="video.vdolink" style="width: 200px"/>-->
+              <!--<div class="item imag" v-for="video of videos" v-bind:key="video._id">-->
+                <!--<video controls="controls"><source :src="video.vdolink" /></video>-->
                 <!--<p>{{video.title}}</p>-->
               <!--</div>-->
             <!--</div>-->
@@ -105,12 +105,13 @@
             <img src="~/assets/images/logo_tv_grey.png" class="img-responsive" />
           </div>
           <div class="col-md-11">
-            <div id="owl-demo" class="owl-carousel owl-theme">
-              <div class="item imag" v-for="video of videos" v-bind:key="video._id">
-                <video controls="controls"><source :src="video.vdolink" /></video>
-                <p>{{video.title}}</p>
-              </div>
-            </div>
+            <!--<div class="owl-theme" style="width: 100%; position: relative">-->
+              <!--<div class="item imag" v-for="video of videos" v-bind:key="video._id">-->
+                <!--<video controls="controls"><source :src="video.vdolink" /></video>-->
+                <!--<p>{{video.title}}</p>-->
+              <!--</div>-->
+            <!--</div>-->
+            <slideshow-video :videos="videos"/>
           </div>
         </div>
       </div>
@@ -185,6 +186,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import chunk from 'lodash/chunk';
 import sanity from '../sanity';
 import imageUrlBuilder from '@sanity/image-url';
 import Slideshow from '~/components/Slideshow.vue';
@@ -192,15 +194,10 @@ import TitlePage from '~/components/TitlePage.vue';
 import TitleHome from '~/components/TitleHome.vue';
 import InfoHome from '~/components/InfoHome.vue';
 import Info2Home from '~/components/Info2Home.vue';
+import SlideshowVideo from '~/components/SlideshowVideo.vue';
 
 import { getTime } from '../helpers/time'
 const builder = imageUrlBuilder(sanity);
-
-const query = `*[_type == "vdopost"] {
-  _id,
-  title,
-  vdolink,
-}[0...16]`;
 
 const queryPost = `*[_type == "post"] {
   _id,
@@ -227,16 +224,9 @@ export default {
   },
   computed: {
     ...mapState({
-      videos: state => state.videos,
       posts: state => state.posts,
+      videos: state => chunk(state.videos, 5),
     }),
-  },
-  mounted() {
-    sanity.fetch(query).then(data => {
-      this.categories = data;
-    }, error => {
-      this.error = error
-    });
   },
   components: {
     Slideshow,
@@ -244,6 +234,7 @@ export default {
     TitleHome,
     InfoHome,
     Info2Home,
+    SlideshowVideo,
   },
   layout: 'default',
 }

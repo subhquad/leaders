@@ -44,8 +44,14 @@ module.exports = {
       }
     }
   },
-  plugins: [{
-    src: '~/plugins/vue-carousel.js',
-    ssr: false
-  }]
+  plugins: [
+    {
+      src: '~/plugins/vue-carousel.js',
+      ssr: false
+    },
+    {
+      src: '~/plugins/vue-gallery.js',
+      ssr: false
+    }
+  ]
 }

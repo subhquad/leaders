@@ -1,7 +1,7 @@
 <template>
   <div>
-    <carousel class="b-carousel" ref="carousel" :paginationEnabled="false" :perPage="1" :autoplay="true" :autoplayTimeout="2000" :loop="true" easing="ease">
-      <slide v-for="post in posts" :key="post._id">
+    <carousel class="b-carousel" ref="carousel" :paginationEnabled="false" :perPage="1" :autoplay="true" :autoplayTimeout="5000" :loop="true" easing="ease">
+      <slide v-for="post in posts" v-bind:key="post._id">
         <nuxt-link :to="'/post/'+ post.link">
           <img :src="post.image" class="img-responsive">
         </nuxt-link>

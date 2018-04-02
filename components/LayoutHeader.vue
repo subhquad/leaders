@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="top_bar">
-
       <div class="row row1 PdLR">
         <div class="pull-left">
           <div class="logo">
@@ -11,8 +10,8 @@
         <div class="pull-right PdTB">
           <div class="right_top">
             <ul>
-              <li><a href="#"><img src="~/assets/images/icon_facebook.png" class="img-responsive" /></a></li>
-              <li><a href="#"><img src="~/assets/images/icon_twitter.png" class="img-responsive" /></a></li>
+              <li><a :href="headerData.facebooklink || '#'"><img src="~/assets/images/icon_facebook.png" class="img-responsive" /></a></li>
+              <li><a :href="headerData.twitterlink || '#'"><img src="~/assets/images/icon_twitter.png" class="img-responsive" /></a></li>
             </ul>
           </div>
           <div class="pull-right">
@@ -56,7 +55,7 @@
             <li v-for="category in categories"  v-bind:key="category._id">
               <nuxt-link :to="'/category/'+category._id">{{ category.title }}</nuxt-link>
             </li>
-            <li style="border-right:none"><nuxt-link to="/contact-us">Contact Us</nuxt-link></li>
+            <li style="border-right:none"><nuxt-link to="/about-us">About Us</nuxt-link></li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </nav>
@@ -66,25 +65,19 @@
 </template>
 
 <script>
-import sanity from '../sanity';
-import { getTimeHeader } from '../helpers/time';
-const query = `*[_type == "category"] {
-  _id,
-  title,
-}[0...50]`;
+  import { getTimeHeader } from '../helpers/time';
+  import { mapState } from 'vuex';
   export default {
     data () {
       return {
-        categories: [],
         date: getTimeHeader(),
       }
     },
-    mounted() {
-      sanity.fetch(query).then(data => {
-        this.categories = data;
-      }, error => {
-        this.error = error
-      });
+    computed: {
+      ...mapState({
+        categories: state => state.categories,
+        headerData: state => state.headerData,
+      }),
     },
   };
 </script>
