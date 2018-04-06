@@ -39,7 +39,7 @@
         </div>
         <div class="col-md-3">
           <avertisement1 />
-          <avertisement2 :posts="posts" />
+          <!--<avertisement2 :posts="posts" />-->
           <avertisement3 title="Weather"/>
           <div class="quote">
             <img class="img-responsive" src="~assets/images/quote.png" />
@@ -63,20 +63,20 @@
   const builder = imageUrlBuilder(sanity);
   export default {
     asyncData ({ params }) {
-      const query = `*[_type == "post" && categories[0]._ref == "${params.id}"] {
+      const query = `*[_type == "post" && categories[0]._ref == "${params.id}"] | order(_createdAt desc) {
         _id,
         title,
         slug,
         categories,
         mainImage,
-        publishedAt,
+        _createdAt,
       }[0..50]`;
       return sanity.fetch(query).then(posts => {
         const data = posts.map(d => {
           return {
             ...d,
             image: builder.image(d.mainImage).url(),
-            created: getTime(d.publishedAt),
+            created: getTime(d._createdAt),
             link: typeof d.slug === 'object'? d.slug.current : 'null',
           };
         });
@@ -88,8 +88,13 @@
         return this.$store.state.categories
       },
       category: function() {
-        return this.$store.state.categories.find(c => c._id === this.categoryId);
-      }
+        const existCategory = this.$store.state.categories.find(c => c._id === this.categoryId)
+        if (existCategory) {
+          return existCategory.title;
+        } else {
+          return 'Category'
+        }
+      },
     },
     components: {
       TitlePage,

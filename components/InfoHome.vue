@@ -4,7 +4,7 @@
       <h5>{{title}}</h5>
       <img src="~/assets/images/grey_line.png" class="img-responsive" />
     </div>
-    <div class="box">
+    <div class="box" v-if="posts && posts.length > 0">
       <ul>
         <li v-for="post of posts" v-bind:key="post._id" v-if="typeof post === 'object' ">
           <a :href="'/post/'+ post.link">

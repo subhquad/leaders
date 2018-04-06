@@ -1,8 +1,10 @@
 <template>
   <div class="video_slider">
-    <div class="container">
-      <h2>{{title}}</h2>
-      <img src="~/assets/images/side_logo.png" class="img-responsive" />
+    <div class="">
+      <div class="title pull-left">{{title}}</div>
+      <div class="pull-right">
+      <img src="~/assets/images/side_logo.png"  height="37px" />
+      </div>
     </div>
   </div>
 </template>

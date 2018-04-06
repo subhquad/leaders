@@ -1,25 +1,25 @@
 <template>
   <div>
-    <title-page name="Contact us"/>
+    <title-page :name="contact.title"/>
     <div class="content">
       <div class="row row1">
         <div class="col-md-9" style="border-right:2px solid #ED1B24">
-          <div class="box1">
-            <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-              took a galley of type and scrambled it to make a type specimen book. It has survived not only five
-              centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was
-              popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
-              recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-            <ul>
-              <li>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                printer took a galley of type and scrambled it to make a type specimen book. It has survived not only
-                five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-              </li>
-              <li>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-                and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem
-                Ipsum.
-              </li>
-            </ul>
+          <div class="box1" v-html="contact.content">
+            <!--<p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer-->
+              <!--took a galley of type and scrambled it to make a type specimen book. It has survived not only five-->
+              <!--centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was-->
+              <!--popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more-->
+              <!--recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>-->
+            <!--<ul>-->
+              <!--<li>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown-->
+                <!--printer took a galley of type and scrambled it to make a type specimen book. It has survived not only-->
+                <!--five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.-->
+              <!--</li>-->
+              <!--<li>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,-->
+                <!--and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem-->
+                <!--Ipsum.-->
+              <!--</li>-->
+            <!--</ul>-->
           </div>
           <div class="img_header">
             <a href="index.html"><img src="~/assets/images/logo.png" class="img-responsive"/></a>
@@ -61,7 +61,17 @@
   import Avertisement1 from '../components/Avertisement1.vue';
   import Avertisement2 from '../components/Avertisement2.vue';
   import MenuBottom from '../components/MenuBottom.vue';
-
+  import blocksToHtml from '@sanity/block-content-to-html';
+  const h = blocksToHtml.h;
+  const serializers = {
+    types: {
+      code: props => (
+        h('pre', {className: props.node.language},
+          h('code', props.node.code)
+        )
+      )
+    }
+  };
   export default {
     components: {
       TitlePage,
@@ -78,13 +88,22 @@
       };
     },
     async asyncData() {
-      const query = `*[_type == "contact"] {
+      const query = `*[_type == "aboutus"] {
         _id,
         title,
+        slug,
+        author,
+        body,
+        publishedAt,
       }[0..50]`;
 
       return sanity.fetch(query).then(contact => {
-        return { contact: contact };
+        const info = contact[0];
+        const html = blocksToHtml({
+          blocks: info.body,
+          serializers: serializers
+        });
+        return { contact: {...info, content: html,} };
       });
     },
     methods: {

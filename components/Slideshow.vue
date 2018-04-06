@@ -1,6 +1,7 @@
 <template>
   <div>
-    <carousel class="b-carousel" ref="carousel" :paginationEnabled="false" :perPage="1" :autoplay="true" :autoplayTimeout="5000" :loop="true" easing="ease">
+    <carousel class="b-carousel" 
+    ref="carousel" :paginationEnabled="false" :perPage="1" :autoplay="true" :autoplayTimeout="5000" :loop="true" :navigationEnabled="true" easing="ease">
       <slide v-for="post in posts" v-bind:key="post._id">
         <nuxt-link :to="'/post/'+ post.link">
           <img :src="post.image" class="img-responsive">
@@ -24,10 +25,12 @@
   }
   .slider-info a {
     color: black;
+    padding-top: 20px;
   }
   .slider-info a:hover {
     color: blue;
   }
+
 </style>
 
 <script>

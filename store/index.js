@@ -9,6 +9,7 @@ export function state () {
     ad: {},
     headerData: {},
     footerData: {},
+    subcategories: {},
     weathers: [
       { _id: '1', country: 'Kuala Lumpur', min: 18, max: 23 },
       { _id: '2', country: 'Kuala Terangganu', min: 20, max: 28 },
@@ -43,6 +44,9 @@ export const mutations = {
   },
   setFooter(state, footer) {
     state.footerData = footer;
+  },
+  setSubcategory(state, subcategory) {
+    state.subcategories = subcategory;
   },
 };
 export const actions =  {
@@ -86,6 +90,12 @@ export const actions =  {
       facebooklink,
       twitterlink,
     }`;
+    const querySubcategory = `*[_type == "subcategory"] {
+      _id,
+      _createdAt,
+      _rev,
+      title
+    }`;
     await sanity.fetch(query).then(data => {
       commit('setCategories', data);
     }, error => {
@@ -122,6 +132,11 @@ export const actions =  {
     });
     await sanity.fetch(queryFooter).then(footer => {
       commit('setFooter', footer[0]|| {});
+    }, error => {
+      console.log(error);
+    });
+    await sanity.fetch(querySubcategory).then(subcategory => {
+      commit('setSubcategory', subcategory);
     }, error => {
       console.log(error);
     });
